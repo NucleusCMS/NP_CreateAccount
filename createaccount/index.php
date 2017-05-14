@@ -76,10 +76,10 @@
 			$btimeoffset	= postVar('timeoffset');
 			$bdefskin		= postVar('defskin');
 // add slashes for sql queries
-			$bname = 		addslashes($bname);
-			$bshortname = 	addslashes($bshortname);
-			$btimeoffset = 	addslashes($btimeoffset);
-			$bdefskin = 	addslashes($bdefskin);
+			$bname = 		sql_real_escape_string($bname);
+			$bshortname = 	sql_real_escape_string($bshortname);
+			$btimeoffset = 	sql_real_escape_string($btimeoffset);
+			$bdefskin = 	sql_real_escape_string($bdefskin);
 // send Mail
 			@mb_language('Ja') ;
 			@mb_internal_encoding('UTF-8');
@@ -473,9 +473,9 @@ echo  '" /></td>
 			echo '※<strong>カテゴリーを削除しました。</strong>';
 		}elseif(postVar('sbmt2')) {
 			if(postVar('cname')) {
-				$cblog = addslashes(postVar('cblog'));
-				$cname = addslashes(postVar('cname'));
-				$cdesc = addslashes(postVar('cdesc'));
+				$cblog = sql_real_escape_string(postVar('cblog'));
+				$cname = sql_real_escape_string(postVar('cname'));
+				$cdesc = sql_real_escape_string(postVar('cdesc'));
 				$query = 'INSERT INTO '.sql_table('category')." (cblog, cname, cdesc) VALUES ('$cblog', '$cname', '$cdesc')";
 				sql_query($query);
 				echo '※<strong>カテゴリーを追加しました。</strong>';
