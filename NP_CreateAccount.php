@@ -1,21 +1,11 @@
 <?php
-if(!function_exists('sql_table'))	{
-	function sql_table($name) {	return 'nucleus_'.$name;	}
-}
 class NP_CreateAccount extends NucleusPlugin {
 	function getName(){return "CreateAccount";}
 	function getAuthor(){return "hard + jun + nyanko";}
 	function getURL(){return "http://nucleus.mz-style.com/";}
 	function getVersion(){return "0.311n";}
 	function getDescription(){return "ユーザーアカウント管理プラグイン。アカウントの作成、削除、チームへの一括登録が行えます。オリジナルからの変更点：FTP使用のOn/Off、希望のフォルダ名で作成可能、Blogを削除してもユーザーは消えません。";}
-	function supportsFeature($what) {
-		switch($what)	{
-			case 'SqlTablePrefix':
-				return 1;
-			default:
-				return 0;
-		}
-	}
+	function supportsFeature($what) {return in_array($what,array('SqlTablePrefix','SqlApi'));}
 	function getEventList() {return array('PostRegister', 'PostAddBlog', 'PreDeleteBlog', 'QuickMenu');}
 	function install() {
 		sql_query('CREATE TABLE IF NOT EXISTS '.sql_table('plugin_ca').' (caid int(11) NOT NULL, cablog char(1), cateam text, PRIMARY KEY (caid))');
@@ -30,7 +20,7 @@ class NP_CreateAccount extends NucleusPlugin {
 	}
 	function uninstall() {
 		if ($this -> getOption('del_uninstall_ca') == 'yes') {
-			mysql_query ("DROP table ".sql_table('plugin_ca'));
+			sql_query ("DROP table ".sql_table('plugin_ca'));
 		}
 		$this -> deleteOption("ftpOn");
 		$this -> deleteOption("ftpServer");
@@ -94,7 +84,7 @@ class NP_CreateAccount extends NucleusPlugin {
 		}
 	}
 	function event_PostRegister($data) {
-		$memberid	= mysql_insert_id();
+		$memberid	= sql_insert_id();
 		$addteam = quickQuery('SELECT cateam as result FROM '.sql_table('plugin_ca').' WHERE caid = '.$memberid);
 		if(!$addteam) return;
 		$addteam = explode('/', $addteam);
