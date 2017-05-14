@@ -41,16 +41,16 @@
 				if($file == $mname) $err = 'このユーザーIDは既に使われています。';
 			}
 			closedir($dir);
-			$result = mysql_query('SELECT bshortname FROM '.sql_table('blog'));
-			while($row = mysql_fetch_assoc($result)) {
+			$result = sql_query('SELECT bshortname FROM '.sql_table('blog'));
+			while($row = sql_fetch_assoc($result)) {
 				if($row['bshortname'] == $mname) $err = 'このユーザーIDは既に使われています。';
 			}
-			mysql_free_result($result);
-			$result = mysql_query('SELECT mname FROM '.sql_table('member'));
-			while($row = mysql_fetch_assoc($result)) {
+			sql_free_result($result);
+			$result = sql_query('SELECT mname FROM '.sql_table('member'));
+			while($row = sql_fetch_assoc($result)) {
 				if($row['mname'] == $mname) $err = 'このユーザーIDは既に使われています。';
 			}
-			mysql_free_result($result);
+			sql_free_result($result);
 //エラー表示
 			if($err) {
 				echo '<h4>※新規アカウントを作成できませんでした。　[警告] '.$err.'</h4>';
@@ -64,7 +64,7 @@
 			$mpassword = md5($pass);
 			$query = 'INSERT INTO '.sql_table('member')." (mname, mrealname, mpassword, memail, murl, mnotes, mcanlogin) VALUES ('$mname', '$mrealname', '$mpassword', '$memail', '$url', '$mnotes', '$mlogin')";
 			sql_query($query);
-			$memberid	= mysql_insert_id();
+			$memberid	= sql_insert_id();
 			$newmem = new MEMBER();
 			$dataArray = array(
 						'member' => &$newmem
@@ -104,11 +104,11 @@
 // create blog
 				$query = 'INSERT INTO '.sql_table('blog')." (bname, bshortname, bdesc, btimeoffset, bdefskin) VALUES ('$bname', '$bshortname', '$bdesc', '$btimeoffset', '$bdefskin')";
 				sql_query($query);
-				$blogid	= mysql_insert_id();
+				$blogid	= sql_insert_id();
 				$blog	=& $manager->getBlog($blogid);
 // create new category
 				sql_query('INSERT INTO '.sql_table('category')." (cblog, cname, cdesc) VALUES ($blogid, 'General','Items that do not fit in other categories')");
-				$catid = mysql_insert_id();
+				$catid = sql_insert_id();
 // set as default category
 				$blog -> setDefaultCategory($catid);
 				$blog -> writeSettings();
@@ -209,8 +209,8 @@
 				<input type="hidden" name="bget" value="3">
 				<select name="memid" onChange="this.form.submit();">
 				<option value="">※メンバー選択</option>';
-				$res = mysql_query('SELECT mnumber, mname FROM '.sql_table('member'));
-				while($row = mysql_fetch_assoc($res)) {
+				$res = sql_query('SELECT mnumber, mname FROM '.sql_table('member'));
+				while($row = sql_fetch_assoc($res)) {
 					$p_flag = ($row['mnumber'] == $req_memid) ? ' selected="selected"' : '';
 					echo '<option value="'.$row['mnumber'].'"'.$p_flag.'>'.$row['mnumber'].' '.$row['mname'].'</option>';
 				}
@@ -220,8 +220,8 @@
 				<input type="hidden" name="bget" value="1">
 				<select name="blogid" onChange="this.form.submit();">
 				<option value="">※チーム選択</option>';
-				$res = mysql_query('SELECT bnumber, bname FROM '.sql_table('blog'));
-				while($row = mysql_fetch_assoc($res)) {
+				$res = sql_query('SELECT bnumber, bname FROM '.sql_table('blog'));
+				while($row = sql_fetch_assoc($res)) {
 					$p_flag = ($row['bnumber'] == $req_blogid) ? ' selected="selected"' : '';
 					echo '<option value="'.$row['bnumber'].'"'.$p_flag.'>'.$row['bnumber'].' '.$row['bname'].'</option>';
 				}
@@ -244,7 +244,7 @@
 				$query .= 'mnumber DESC';
 			}
 			$query .= ' LIMIT '.$p00.','.$count;
-			$result = mysql_query($query) or die("Bad query: ".mysql_error());;
+			$result = sql_query($query) or die("Bad query: ".sql_error());;
 //print_r($query);
 //body header print
 			$loginn = ($_GET['mcanlogin'] == 1) ? '0' : '1';
@@ -266,7 +266,7 @@
 				<th>特記事項</th>
 			</tr></thead><tbody>';
 //body main print
-			while($row = mysql_fetch_assoc($result)) {
+			while($row = sql_fetch_assoc($result)) {
 				$mnotes = shorten(hsc(trim($row['mnotes'])), 40, '...');
 				$tadmin = ($req_bget == 1 || $req_bget == 3) ? $row['tadmin'] : $row['mnumber'] ;
 				$bname = (!$row['bnumber']) ? '' : '<a href="'.$CONF['AdminURL'].'?action=manageteam&amp;blogid='.$row['bnumber'].'" title="チーム設定ページへ">'.$row['bnumber'].' '.$row['bname'].'</a><br />'.$row['bshortname'] ;
@@ -384,10 +384,10 @@
 	}else {
 		$query = 'SELECT tblog FROM '.sql_table('team').' WHERE tmember = '.$member -> getID();
 		$result = sql_query($query);
-		while ($row = mysql_fetch_object($result)) {
+		while ($row = sql_fetch_object($result)) {
     	$blogid = $row -> tblog;
 		}
-		mysql_free_result($result);
+		sql_free_result($result);
 		$blog =& $manager->getBlog($blogid);
 		$ballowpast = (postVar('allowpastposting')) ? postVar('allowpastposting') : 0; 
 		$bcomments = (postVar('comments')) ? postVar('comments') : 0;
@@ -485,8 +485,8 @@ echo  '" /></td>
 		}
 		echo '		<table><thead><tr>
 			<th>カテゴリーの名前</th><th>カテゴリーの説明</th><th colspan="2">アクション</th></tr></thead>';
-		$result = mysql_query('SELECT * FROM '.sql_table('category').' WHERE cblog='.$blog->getID().' ORDER BY cname');
-		while($row = mysql_fetch_assoc($result)) {
+		$result = sql_query('SELECT * FROM '.sql_table('category').' WHERE cblog='.$blog->getID().' ORDER BY cname');
+		while($row = sql_fetch_assoc($result)) {
 			echo '			<tbody><tr onmouseover="focusRow(this);" onmouseout="blurRow(this);">
 				<form method="post" action="'.$_SERVER['PHP_SELF'].'">
 				<input type="hidden" name="catid" value="'.$row['catid'].'" />
@@ -497,7 +497,7 @@ echo  '" /></td>
 				</form>
 			</tr></tbody>';
 		}
-		mysql_free_result($result);
+		sql_free_result($result);
 		echo '		</table>';
 
 		echo '		<form action="'.$_SERVER['PHP_SELF'].'" method="post"><div>
