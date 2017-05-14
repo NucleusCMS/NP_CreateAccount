@@ -267,7 +267,7 @@
 			</tr></thead><tbody>';
 //body main print
 			while($row = mysql_fetch_assoc($result)) {
-				$mnotes = shorten(htmlspecialchars(trim($row['mnotes'])), 40, '...');
+				$mnotes = shorten(hsc(trim($row['mnotes'])), 40, '...');
 				$tadmin = ($req_bget == 1 || $req_bget == 3) ? $row['tadmin'] : $row['mnumber'] ;
 				$bname = (!$row['bnumber']) ? '' : '<a href="'.$CONF['AdminURL'].'?action=manageteam&amp;blogid='.$row['bnumber'].'" title="チーム設定ページへ">'.$row['bnumber'].' '.$row['bname'].'</a><br />'.$row['bshortname'] ;
 				echo '			<tr>
@@ -412,18 +412,18 @@
 		<table><tr>
 			<td>ユーザーID</td>
 			<td>';
-		echo  htmlspecialchars($blog->getShortName());
+		echo  hsc($blog->getShortName());
 		echo  '			</td>
 		</tr><tr>
 			<td>ブログのURL</td>
 			<td>';
-		$burl = htmlspecialchars($blog->getURL());
+		$burl = hsc($blog->getURL());
 		echo '<a href="'.$burl.'" target=_blank">'.$burl.'</a>';
 		echo  '			</td>
 		</tr><tr>
 			<td>ブログの名前</td>
 			<td><input name="name" tabindex="10" size="40" maxlength="60" value="';
-		echo htmlspecialchars($blog->getName());
+		echo hsc($blog->getName());
 		echo '" /></td>
 		</tr><tr>
 			<td>ブログのスキン</td>
@@ -439,17 +439,17 @@ echo  '			</td>
 		</tr><tr>
 			<td>過去の日時での投稿を許可しますか?（ 1 … はい、0 … いいえ）</td>
 			<td><input name="allowpastposting" tabindex="1" maxlength="1" size="20" value="';
-echo  htmlspecialchars($blog->allowPastPosting());
+echo  hsc($blog->allowPastPosting());
 echo  '" /></td>
 		</tr><tr>
 			<td>コメントを許可しますか?（ 1 … はい、0 … いいえ）</td>
 			<td><input name="comments" tabindex="1" maxlength="1" size="20" value="';
-echo  htmlspecialchars($blog->commentsEnabled());
+echo  hsc($blog->commentsEnabled());
 echo  '" /></td>
 		</tr><tr>
 			<td>非メンバーのコメントを許可しますか?（ 1 … はい、0 … いいえ）</td>
 			<td><input name="public" tabindex="1" maxlength="1" size="20" value="';
-echo  htmlspecialchars($blog->isPublic());
+echo  hsc($blog->isPublic());
 echo  '" /></td>
 		</tr><tr>		
 			<td>設定の変更</td>
