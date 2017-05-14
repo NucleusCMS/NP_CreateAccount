@@ -3,7 +3,7 @@ class NP_CreateAccount extends NucleusPlugin {
 	function getName(){return "CreateAccount";}
 	function getAuthor(){return "hard + jun + nyanko";}
 	function getURL(){return "http://nucleus.mz-style.com/";}
-	function getVersion(){return "0.311n";}
+	function getVersion(){return "0.4";}
 	function getDescription(){return "ユーザーアカウント管理プラグイン。アカウントの作成、削除、チームへの一括登録が行えます。オリジナルからの変更点：FTP使用のOn/Off、希望のフォルダ名で作成可能、Blogを削除してもユーザーは消えません。";}
 	function supportsFeature($what) {return in_array($what,array('SqlTablePrefix','SqlApi'));}
 	function getEventList() {return array('PostRegister', 'PostAddBlog', 'PreDeleteBlog', 'QuickMenu');}
