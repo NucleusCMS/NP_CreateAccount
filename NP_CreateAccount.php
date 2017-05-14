@@ -59,7 +59,6 @@ class NP_CreateAccount extends NucleusPlugin {
 		global $CONF;
 		if(postVar('submit')){
 			@mb_language('Ja') ;
-			@mb_internal_encoding('EUC-JP');
 			$subject = '新規アカウント申込 : '.$CONF['SiteName'];
 			$message = "'".$CONF['SiteName']."'への新規アカウント申込がありました。\n".$CONF['IndexURL']."\n\n";
 			$message .= 'お名前 : '.postVar('realname')."\n";
